@@ -88,6 +88,8 @@
 		9DAAD4351BCF158100560FCD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Jia Yu";
 				TargetAttributes = {
@@ -236,6 +238,7 @@
 				9DAAD4461BCF158100560FCD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

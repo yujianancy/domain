@@ -8,19 +8,19 @@
 
 import Foundation
 
-enum Currency{
-    
-    case USD
-    
-    case GBP
-    
-    case EUR
-    
-    case CAN
-    
-}
-
 struct Money{
+    
+    enum Currency{
+        
+        case USD
+        
+        case GBP
+        
+        case EUR
+        
+        case CAN
+        
+    }
     
     var amount:Double
     
@@ -34,8 +34,6 @@ struct Money{
         
         let U2C = 1.25
         
-        let U2U = 1.0
-        
         var amount:Double = self.amount
         
         if self.currency != convC{
@@ -44,39 +42,39 @@ struct Money{
             
         case (.USD, .GBP):
             
-            amount = U2G
+            amount = amount * U2G
             
         case (.GBP, .USD):
             
-            amount = 1.0/U2G
+            amount = amount * 1.0/U2G
             
         case (.USD, .EUR):
             
-            amount = U2E
+            amount = amount * U2E
             
         case (.EUR, .USD):
             
-            amount = 1.0/U2E
+            amount = amount * 1.0/U2E
             
         case (.USD, .CAN):
             
-            amount = U2C
+            amount = amount * U2C
             
         case (.CAN, .USD):
             
-            amount = 1.0/U2C
+            amount = amount * 1.0/U2C
             
         case (.GBP, .EUR):
             
-            amount = 1.0/U2G*U2E
+            amount = amount * 1.0/U2G*U2E
             
         case (.GBP, .CAN):
             
-            amount = 1.0/U2G*U2C
+            amount = amount * 1.0/U2G*U2C
             
         case (.EUR, .GBP):
             
-            amount = 1.0/U2E*U2G
+            amount = amount * 1.0/U2E*U2G
             
         case (.EUR, .CAN):
             
@@ -92,22 +90,22 @@ struct Money{
             
         default:
             
-            println("Please enter one of the four currencies.")
+            print("Please enter one of the four currencies.")
             
             }
             
         }
         
-        var m = Money(amount: amount, currency: convC)
+        let m = Money(amount: amount, currency: convC)
         
         return m
     }
     
     func add(money: [Money]) -> Money{
         
-        var amount = self.amount
+        var amount = money[0].amount
         
-        for index in 0...money.count{
+        for index in 1...money.count-1{
             
             amount = amount + money[index].convert(self.currency).amount
             
@@ -121,15 +119,15 @@ struct Money{
     
     func sub(money: [Money]) -> Money{
         
-        var amount = self.amount
+        var amount = money[0].amount
         
-        for index in 1...money.count{
+        for index in 1...money.count-1{
             
             amount = amount - money[index].convert(self.currency).amount
             
         }
         
-        var m = Money(amount: amount, currency: self.currency)
+        let m = Money(amount: amount, currency: self.currency)
         
         return m
         
@@ -137,15 +135,18 @@ struct Money{
     
 }
 
-enum Per{
-    
-    case hour
-    
-    case year
-}
+var a = Money(amount: 3, currency: .EUR)
 
+print (a.convert(.CAN))
 
 struct Salary{
+    
+    enum Per{
+        
+        case hour
+        
+        case year
+    }
     
     var s: Money
     
@@ -175,16 +176,16 @@ class Job{
             amount = amount * hours
         }
         
-        var m = Money(amount: amount, currency: self.salary.s.currency)
+        let m = Money(amount: amount, currency: self.salary.s.currency)
         
         return m
     }
     
     func raise(percent: Double) -> Salary{
         
-        var amount = self.salary.s.amount * (1 + percent)
+        let amount = self.salary.s.amount * (1 + percent)
         
-        var sal = Salary(s: Money(amount: amount, currency: self.salary.s.currency), per: self.salary.per)
+        let sal = Salary(s: Money(amount: amount, currency: self.salary.s.currency), per: self.salary.per)
         
         return sal
     }
@@ -198,10 +199,126 @@ class Person{
     
     var age: Int
     
-    var job: Job
+    var job: Job?
     
+    var spouse: Person?
+    
+    init(first: String, last: String, age: Int, job: Job?, spouse: Person?){
+        
+        firstName = first
+        
+        lastName = last
+        
+        self.age = age
+        
+        self.job = job
+        
+        self.spouse = spouse
+        
+        if self.age < 16{
+            
+            if self.job != nil{
+                
+                self.job = nil
+                
+                print("This person can't have a job yet!")
+                
+            }
+            
+        }
+        
+        if self.age < 18{
+            
+            if self.spouse != nil{
+            
+            self.spouse = nil
+            
+            print("This person can't get married yet!")
+                
+            }
+        }
+    }
+    
+   // func display() -> String{
+        
+        //print("firstName:" + self.firstName , "lastName:" + self.lastName + "age:" + (String),self.age)
+        
+        
+        
+        //s = s + "job title:" + (String)self.job?.title + "job salary:" + (String)self.job?.salary.s.amount
+        
+        //s = s + (String)self.job?.salary.s.currency + "per" + (String)self.job?.salary.per
+        
+        //s = s + "spouse:" + (String)self.spouse.display())
+        
+        //print(s)
+
+        
+   // }
     
 }
+
+class Family{
+    
+    var members:[Person]
+    
+    init(members: [Person]){
+        
+        self.members = members
+        
+        var isFamily = false
+        
+        for index in 0...self.members.count - 1{
+        
+            if self.members[index].age > 21{
+                
+                isFamily = true
+                
+            }
+        }
+        
+        if !isFamily{
+            
+            print("This is not a family!")
+            
+        }
+    }
+    
+    func householdIncome() -> Money{
+        
+        var mon = [Money]()
+        
+        mon[0] = (members[0].job?.salary.s)!
+        
+        for index in 1...members.count - 1{
+            
+            mon.append(members[index].job!.salary.s)
+        }
+        
+        return (members[0].job?.salary.s.add(mon))!
+        
+    }
+    
+    func haveChild() -> Family{
+        
+        self.members.append(Person(first:"NA", last: "NA", age:0, job: nil, spouse: nil))
+        
+        return self
+        
+    }
+}
+
+var sa = Salary(s: a, per: .hour)
+
+var j1 = Job(title: "sde", salary: sa)
+
+var p1 = Person(first: "jia", last: "yu", age: 17, job: j1, spouse: nil)
+
+var p2 = Person(first: "xxx", last: "xx", age: 20, job: j1, spouse: p1)
+
+var f1 = Family(members: [p1,p2])
+
+
 
 
 
