@@ -135,9 +135,34 @@ struct Money{
     
 }
 
+extension Money{
+    
+    init(a: Double, c: Currency){
+        
+        self.amount = a
+        
+        self.currency = c
+        
+        if currency != .USD || currency != .CAN || currency != .EUR || currency != .GBP{
+            
+            print("Please enter one of the four currency, using .USD automatically")
+            
+            self.currency = .USD
+        }
+    }
+}
+
 var a = Money(amount: 3, currency: .EUR)
 
-print (a.convert(.CAN))
+var b = Money(amount: 5.6, currency: .USD)
+
+var c = Money(amount: 2.3, currency: .GBP)
+
+var d = Money(amount: 1.0, currency: .CAN)
+
+print(a.add([a,b,c,d]))
+
+print(a.sub([a,b,c,d]))
 
 struct Salary{
     
@@ -191,6 +216,7 @@ class Job{
     }
 }
 
+
 class Person{
     
     var firstName: String
@@ -239,23 +265,18 @@ class Person{
         }
     }
     
-   // func display() -> String{
+    func display(){
         
-        //print("firstName:" + self.firstName , "lastName:" + self.lastName + "age:" + (String),self.age)
+        print("firstName:" , self.firstName , "lastName:" , self.lastName , "age:" ,self.age, "job title:" , self.job!.title, "job salary:", self.job!.salary.s.amount, self.job!.salary.s.currency, "per", self.job!.salary.per)
         
-        
-        
-        //s = s + "job title:" + (String)self.job?.title + "job salary:" + (String)self.job?.salary.s.amount
-        
-        //s = s + (String)self.job?.salary.s.currency + "per" + (String)self.job?.salary.per
-        
-        //s = s + "spouse:" + (String)self.spouse.display())
-        
-        //print(s)
-
-        
-   // }
+        if self.spouse != nil{
+            
+            print("spouse:")
+            
+            self.spouse!.display()
+        }
     
+}
 }
 
 class Family{
@@ -317,6 +338,10 @@ var p1 = Person(first: "jia", last: "yu", age: 17, job: j1, spouse: nil)
 var p2 = Person(first: "xxx", last: "xx", age: 20, job: j1, spouse: p1)
 
 var f1 = Family(members: [p1,p2])
+
+p1.display()
+
+p2.display()
 
 
 
