@@ -235,7 +235,7 @@ class Person{
         }
     }
     
-    func display(){
+    func toString(){
         
         print("firstName:" , self.firstName , "lastName:" , self.lastName , "age:" ,self.age, "job title:" , self.job!.title, "job salary:", self.job!.salary.s.amount, self.job!.salary.s.currency, "per", self.job!.salary.per)
         
@@ -243,7 +243,7 @@ class Person{
             
             print("spouse:")
             
-            self.spouse!.display()
+            self.spouse!.toString()
         }
     
 }
@@ -350,9 +350,9 @@ print("The total income of f1:", f1.householdIncome())
 
 print("The total income of f2:", f2.householdIncome())
 
-print("p1:", p1.display())
+print("p1:", p1.toString())
 
-print("p2:", p2.display())
+print("p2:", p2.toString())
 
 
 
