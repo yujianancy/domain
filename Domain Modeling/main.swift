@@ -350,9 +350,13 @@ print("The total income of f1:", f1.householdIncome())
 
 print("The total income of f2:", f2.householdIncome())
 
-print("p1:", p1.toString())
+print("p1:")
 
-print("p2:", p2.toString())
+p1.toString()
+
+print("p2:")
+
+p2.toString()
 
 
 
