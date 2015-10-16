@@ -135,35 +135,6 @@ struct Money{
     
 }
 
-extension Money{
-    
-    init(a: Double, c: Currency){
-        
-        self.amount = a
-        
-        self.currency = c
-        
-        if currency != .USD || currency != .CAN || currency != .EUR || currency != .GBP{
-            
-            print("Please enter one of the four currency, using .USD automatically")
-            
-            self.currency = .USD
-        }
-    }
-}
-
-var a = Money(amount: 3, currency: .EUR)
-
-var b = Money(amount: 5.6, currency: .USD)
-
-var c = Money(amount: 2.3, currency: .GBP)
-
-var d = Money(amount: 1.0, currency: .CAN)
-
-print(a.add([a,b,c,d]))
-
-print(a.sub([a,b,c,d]))
-
 struct Salary{
     
     enum Per{
@@ -215,7 +186,6 @@ class Job{
         return sal
     }
 }
-
 
 class Person{
     
@@ -309,11 +279,12 @@ class Family{
         
         var mon = [Money]()
         
-        mon[0] = (members[0].job?.salary.s)!
-        
-        for index in 1...members.count - 1{
+        for index in 0...members.count - 1{
+            
+            if members[index].job != nil{
             
             mon.append(members[index].job!.salary.s)
+            }
         }
         
         return (members[0].job?.salary.s.add(mon))!
@@ -329,19 +300,59 @@ class Family{
     }
 }
 
-var sa = Salary(s: a, per: .hour)
+var a = Money(amount: 3, currency: .EUR)
+
+var b = Money(amount: 5.6, currency: .USD)
+
+var c = Money(amount: 2.3, currency: .GBP)
+
+var d = Money(amount: 1.0, currency: .CAN)
+
+print("The total amount is:", a.add([a,b,c,d]))
+
+print("The amount after subtract is:", a.sub([a,b,c,d]))
+
+var saa = Salary(s: a, per: .year)
+
+var sa = Salary(s: b, per: .hour)
 
 var j1 = Job(title: "sde", salary: sa)
+
+var j = Job(title: "worker", salary: saa)
+
+print("The salary after raising is:", j.raise(0.5))
+
+print("The salary after raising is:", j1.raise(0.2))
+
+print("The income is:", j.calculateIncome(4.2))
+
+print("The income is:", j1.calculateIncome(2.1))
 
 var p1 = Person(first: "jia", last: "yu", age: 17, job: j1, spouse: nil)
 
 var p2 = Person(first: "xxx", last: "xx", age: 20, job: j1, spouse: p1)
 
-var f1 = Family(members: [p1,p2])
+var p3 = Person(first: "ww", last: "aa", age: 15, job: j, spouse: p2)
 
-p1.display()
+var p4 = Person(first: "ws", last: "as", age: 25, job: j, spouse: p2)
 
-p2.display()
+var f1 = Family(members: [p1,p2,p3])
+
+var f2 = Family(members: [p1,p4])
+
+print("How many members are there in f1?", f1.members.count)
+
+f1.haveChild()
+
+print("How many members are there after having a child in f1?", f1.members.count)
+
+print("The total income of f1:", f1.householdIncome())
+
+print("The total income of f2:", f2.householdIncome())
+
+print("p1:", p1.display())
+
+print("p2:", p2.display())
 
 
 
