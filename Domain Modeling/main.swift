@@ -8,7 +8,13 @@
 
 import Foundation
 
-struct Money{
+protocol CustomStringConvertible{
+    
+    var description:String{get set}
+    
+}
+
+struct Money: CustomStringConvertible{
     
     enum Currency{
         
@@ -25,6 +31,14 @@ struct Money{
     var amount:Double
     
     var currency:Currency
+    
+    var description:String
+    
+    init (currency: Currency, amount: Double){
+        
+        self.description = String(stringInterpolationSegment: currency) + String(stringInterpolationSegment: amount)
+        
+    }
     
     func convert(convC: Currency) -> Money{
         
