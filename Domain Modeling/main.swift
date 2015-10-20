@@ -14,17 +14,37 @@ protocol CustomStringConvertible{
     
 }
 
-struct Money: CustomStringConvertible{
+protocol Mathematics{
     
-    enum Currency{
+    func add(money:[Money]) -> Money
+    
+    func sub(money:[Money]) -> Money
+    
+}
+
+extension Double{
+    
+    var USD: Money {return Money(amount: self, currency: .USD)}
+    
+    var GBP: Money {return Money(amount: self, currency: .GBP)}
+    
+    var EUR: Money {return Money(amount: self, currency: .EUR)}
+    
+    var CAN: Money {return Money(amount: self, currency: .CAN)}
+    
+}
+
+struct Money: CustomStringConvertible, Mathematics{
+    
+    enum Currency: String{
         
-        case USD
+        case USD = "USD"
         
-        case GBP
+        case GBP = "GBP"
         
-        case EUR
+        case EUR = "EUR"
         
-        case CAN
+        case CAN = "CAN"
         
     }
     
@@ -34,9 +54,13 @@ struct Money: CustomStringConvertible{
     
     var description:String
     
-    init (currency: Currency, amount: Double){
+    init (amount: Double,currency: Currency){
         
-        self.description = String(stringInterpolationSegment: currency) + String(stringInterpolationSegment: amount)
+        self.amount = amount
+        
+        self.currency = currency
+        
+        self.description = currency.rawValue + String(amount)
         
     }
     
@@ -125,7 +149,7 @@ struct Money: CustomStringConvertible{
             
         }
         
-        let m = Money(amount: amount, currency: self.currency)
+        let m = Money(amount:amount, currency: self.currency)
         
         return m
     
@@ -149,31 +173,46 @@ struct Money: CustomStringConvertible{
     
 }
 
-struct Salary{
+struct Salary:CustomStringConvertible{
     
-    enum Per{
+    enum Per:String{
         
-        case hour
+        case hour = " per hour"
         
-        case year
+        case year = " per year"
     }
     
     var s: Money
     
     var per: Per
+    
+    var description: String
+    
+    init(s: Money, per: Per){
+        
+        self.s = s
+        
+        self.per = per
+        
+        self.description = s.description + per.rawValue
+    }
 }
 
-class Job{
+class Job:CustomStringConvertible{
     
     var title:String
     
     var salary: Salary
+    
+    var description: String
     
     init(title:String, salary: Salary){
         
         self.title = title
         
         self.salary = salary
+        
+        self.description = title + " " + salary.description
         
     }
     
@@ -201,7 +240,7 @@ class Job{
     }
 }
 
-class Person{
+class Person:CustomStringConvertible{
     
     var firstName: String
     
@@ -212,6 +251,8 @@ class Person{
     var job: Job?
     
     var spouse: Person?
+    
+    var description: String
     
     init(first: String, last: String, age: Int, job: Job?, spouse: Person?){
         
@@ -247,29 +288,42 @@ class Person{
                 
             }
         }
-    }
-    
-    func toString(){
         
-        print("firstName:" , self.firstName , "lastName:" , self.lastName , "age:" ,self.age, "job title:" , self.job!.title, "job salary:", self.job!.salary.s.amount, self.job!.salary.s.currency, "per", self.job!.salary.per)
+        self.description = self.firstName + " " + self.lastName + " " + "age:" + " " + String(self.age) 
+    
+        if self.job != nil{
+            
+            self.description = self.description + " " + "job:" + self.job!.description
+
+        }
         
         if self.spouse != nil{
             
-            print("spouse:")
-            
-            self.spouse!.toString()
+            self.description = self.description + " " + "spouse:" + self.spouse!.description
         }
+        
+    }
     
-}
+    
+    func toString(){
+        
+        print(self.description)
+        
+    }
+    
 }
 
-class Family{
+class Family:CustomStringConvertible{
     
     var members:[Person]
+    
+    var description:String
     
     init(members: [Person]){
         
         self.members = members
+        
+        self.description = ""
         
         var isFamily = false
         
@@ -280,6 +334,8 @@ class Family{
                 isFamily = true
                 
             }
+            
+            self.description = self.description + self.members[index].description
         }
         
         if !isFamily{
@@ -287,6 +343,7 @@ class Family{
             print("This is not a family!")
             
         }
+
     }
     
     func householdIncome() -> Money{
@@ -322,9 +379,27 @@ var c = Money(amount: 2.3, currency: .GBP)
 
 var d = Money(amount: 1.0, currency: .CAN)
 
-print("The total amount is:", a.add([a,b,c,d]))
+//Testing the extension for Double
 
-print("The amount after subtract is:", a.sub([a,b,c,d]))
+print(a.amount.USD.description)
+
+print(3.56.EUR.description)
+
+//Testing CustomStringConvertible protocol for Money
+
+print(a.description)
+
+print(b.description)
+
+print(c.description)
+
+print(d.description)
+
+//Testing Mathematics protocol
+
+print("The total amount is:", a.add([a,b,c,d]).description)
+
+print("The amount after subtract is:", a.sub([a,b,c,d]).description)
 
 var saa = Salary(s: a, per: .year)
 
@@ -334,13 +409,15 @@ var j1 = Job(title: "sde", salary: sa)
 
 var j = Job(title: "worker", salary: saa)
 
-print("The salary after raising is:", j.raise(0.5))
+//Testing functions and protocols for job
 
-print("The salary after raising is:", j1.raise(0.2))
+print("The salary after raising is:", j.raise(0.5).description)
 
-print("The income is:", j.calculateIncome(4.2))
+print("The salary after raising is:", j1.raise(0.2).description)
 
-print("The income is:", j1.calculateIncome(2.1))
+print("The income is:", j.calculateIncome(4.2).description)
+
+print("The income is:", j1.calculateIncome(2.1).description)
 
 var p1 = Person(first: "jia", last: "yu", age: 17, job: j1, spouse: nil)
 
@@ -354,23 +431,43 @@ var f1 = Family(members: [p1,p2,p3])
 
 var f2 = Family(members: [p1,p4])
 
+//Testing protocol for person
+
+print("p1:" + p1.description)
+
+print("p2:" + p2.description)
+
+print("p3:" + p3.description)
+
+print("p4:" + p4.description)
+
+//Testing toString function for person
+
+p1.toString()
+
+p2.toString()
+
+//Testing functions and protocols for family
+
 print("How many members are there in f1?", f1.members.count)
+
+print(f1.description)
+
+print(f2.description)
 
 f1.haveChild()
 
 print("How many members are there after having a child in f1?", f1.members.count)
 
-print("The total income of f1:", f1.householdIncome())
+print(f1.description)
 
-print("The total income of f2:", f2.householdIncome())
+print("The total income of f1:", f1.householdIncome().description)
 
-print("p1:")
+print("The total income of f2:", f2.householdIncome().description)
 
-p1.toString()
 
-print("p2:")
 
-p2.toString()
+
 
 
 

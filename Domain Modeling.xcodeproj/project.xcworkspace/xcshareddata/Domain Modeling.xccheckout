@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>F7F3EDDF-1324-4B2D-9C9A-4168BC7657C4</string>
 	<key>IDESourceControlProjectName</key>
-	<string>Domain Modeling</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>99DAD808FCED1247AA825DA61ED65058209C6AC7</key>
 		<string>https://github.com/yujianancy/domain.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Domain Modeling.xcodeproj</string>
+	<string>Domain Modeling.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>99DAD808FCED1247AA825DA61ED65058209C6AC7</key>
